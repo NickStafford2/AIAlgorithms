@@ -60,20 +60,47 @@ This algorithm is inspired by the methods ants use when foraging for resources. 
 
 # 2. Write a memory bound A* algorithm that retains at most M% of the total fringe at any time where M is a parameter using universal and existential quantifiers and set-based abstractions. Discard the p% worst cost fringe candidates after every move. The value of p improves linearly as the search progresses at the rate of r%. There will be no credit for writing natural language explanations or writing a program. 10 points
 
+Local Search: An ant is searching for food. The intensity of the nectar’s scent is given in the matrix
+cells. Ant is at location (1, 1) and the nectar is at location (4, 3), where 4 is the row index and 3 is the
+column index as shown in the figure. The ant can move horizontally, vertically and diagonally. There
+are obstructions in three cells where ant cannot go. The cells are (2, 1), (3, 3) and (4, 1). Draw the tree
+for possible movements, and the best path taken by ant assuming that ant can sense the smell up to
+only two cells beyond horizontally and vertically and one cell diagonally. For example, at (1, 1), she can
+sense the smell in (1, 2), (2, 1), (1, 3), (3, 1) and (2, 2).
+
+
+figure 1
 
 
 
+4. Given a population of 4 initial positions in a 4 X 4 board of N-queens given as the column
+vector <1, 3, 2, 4>, < 1, 1, 1, 1>, <1, 2, 3, 4>, <1, 1, 2, 4>, Use local search and movement
+of one queen picked randomly to place the queen such that the number of attacking queen
+reduces for each of initial positions separately. Show at least four moves. Use random
+number generator from a computer to pick up the column number of the queen to be moved.
+Show the process and the table of random number generated. Do not use your brain power
+to generate random numbers. 10 points
+5. For the example in the book (see Figure on the next page), work out if a person has to travel
+from Neamt to Craiova. Show the steps for greedy best first search and A* search. Measure
+the distance from Neamt using a ruler, and convert to mile knowing that one centimeter is
+approximately equivalent to 40 miles in the map for heuristic estimation. 20 points
+6. Min-max tree: For the following Min-max tree identify the min-max value at each node,
+and using alpha-beta pruning identify which branches need not be explored. Explain clearly
+the rationale, specify the
+α-
+β condition which applies for each node not to be expanded. No
+credit for just specifying answers.
 
 
+Bonus Problem
+7. For a 6 X 6 board, design a good connect four evaluation-function for in-max trees
+assuming that a players (including computer) can see only upto two moves ahead and
+show the Min-Max tree for the next two moves by human and two moves by the
+computer for the following board position. Assume that red belongs to human; black
+belongs to computer. The next move is for the human.
 
 
-
-
-
-
-
-
-
+figure s below
 
 
 
