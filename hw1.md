@@ -53,51 +53,97 @@ This algorithm looks ahead several moves and guesses the future state assuming o
 
 This algorithm is limited by how computationally difficult it is to look ahead and predict future states. Some games have potential states that grow exponentally with each turn, so the look ahead is limited. Additionally, the algorithm may not accurately predict the opponents move, so potental better states may be missed. 
 
+ ## h. Explain the ant colony optimization. 
+This algorithm is inspired by the methods ants use when foraging for resources. The ants give off pheromones as they forage, and the concentration of pheremones signal other ants tho persue a route or resource. While the ants initially forage randomly, over time, successful ants give off pheremones indicating the presence of resources such as food. Ants become attracted to pheremones and many accumulate around the resource. Additionally, as ants traverse to and from the hive to the resource, pheremones accumulate along the route traversed. Due to pheremone concentration and simple euclidiean geometry, the shortest route is descovered by the colony by following the highest concentration of pheremones. If the resource is removed or the track to it is eliminated, the pheremone trail disapates and ants return to normal behavior, randomly foraging for the next resource.
 
-## h. Explain the ant colony optimization.
-This algorithm is inspired by the methods ants use when foraging for resources. The ants give off pheromones as they forage, and the concentration of pheremones signal other ants tho persue a route or resource. 
+This algorithm works well when the goal state is moving or varies over time. The ideal solution may not be achieved, but a good path to a goal state is approximated. Usually, this is represented algorithmically with graphs representing various paths. Ants are represented as individual actors making a trip along various edges and returning to the start node. Edges have pheremone values dependent on the edge weight and the number of ants traversing it. Ants traverse the graph pseudo-randomly, but have a higher probablilty to the edges of higher pheremone concentration. 
 
 
 # 2. Write a memory bound A* algorithm that retains at most M% of the total fringe at any time where M is a parameter using universal and existential quantifiers and set-based abstractions. Discard the p% worst cost fringe candidates after every move. The value of p improves linearly as the search progresses at the rate of r%. There will be no credit for writing natural language explanations or writing a program. 10 points
 
-Local Search: An ant is searching for food. The intensity of the nectar’s scent is given in the matrix
-cells. Ant is at location (1, 1) and the nectar is at location (4, 3), where 4 is the row index and 3 is the
-column index as shown in the figure. The ant can move horizontally, vertically and diagonally. There
-are obstructions in three cells where ant cannot go. The cells are (2, 1), (3, 3) and (4, 1). Draw the tree
-for possible movements, and the best path taken by ant assuming that ant can sense the smell up to
-only two cells beyond horizontally and vertically and one cell diagonally. For example, at (1, 1), she can
-sense the smell in (1, 2), (2, 1), (1, 3), (3, 1) and (2, 2).
+Explanation:
+M = ? 
+Assume the existance of some graph object that can generate graphs and randomly select a start and goal node. 
+
+Algorithm: 
+
+function h(node: current, node: goal):
+    // use a heuristic that never overestimates the real distance
+    return eucliean_distance(current.pos, goal.pos) // pythagorean theorem
+
+function recreate_path(start, goal)
+    path = new List<node>()
+    do:
+        path.add(goal)
+        current = current.previous
+    while previous != start; 
+    return path
+
+function a_star(g: Graph, start: node, goal: node):
+    M_percent = G.get_num_of_edges() / G.get_num_of_nodes()/
+    visited = G.get_num_of_nodes()
+    unvisited = 0
+    
+    fringe = new PriorityQueue()
+    fringe.add(start)
+    
+    while fringe is not empty:
+        // Select the node with the smallest distance and remove it from the priority queue/fringe
+        current = fringe.top()
+        fringe.pop()
+        if current == goal: 
+            break
+        current.visited = true
+
+        // Remove excess fringe to save memory. This will not remove any at the start, but will remove more and more nodes linearly as it goes on, such that by the time the end is reached, the fringe will be no more than M% of the total number of nodes.  did not write in code for brevity. See attached image to see math of how to figure this out.  also, to save memory, when removing from the fringe, this function should unset the variables tracking distance and previous. 
+        remove_excess_from_fringe()  
+
+        // normal A* algorithm after this. 
+        forEach neighbor in current.get_neighbors():
+            if neighbor.visited
+                continue
+            // distance from start to neighbor
+            possible_g = distance_from_start(current) + G.getEdge(current, neighbor)
+            
+            if (!neighbor.visited) // new node discovered
+                fringe.add(neighbor)
+            else if possible_g > neighbor.g
+                continue // not a better path
+            // this is the best path found yet. 
+            neighbor.current = current
+            neighbor.g = possible_g
+            neighbor.f = h(neighbor, goal) + neighbor.g
+        
+    clean_up_nodes() // some function that removes added properties like .visited and distance
+    return recreate_path(start, goal)
+
+function main(): 
+    g = Graph.generate_graph() // some existing function where G has n nodes and e edges. 
+    start = G.getStartNode() // some existing function 
+    goal = G.getGoalNode() // some existing function
+    
+    return a_star(g, start, goal)
+
+# 3 Local Search: 
+An ant is searching for food. The intensity of the nectar’s scent is given in the matrix cells. Ant is at location (1, 1) and the nectar is at location (4, 3), where 4 is the row index and 3 is the column index as shown in the figure. The ant can move horizontally, vertically and diagonally. There are obstructions in three cells where ant cannot go. The cells are (2, 1), (3, 3) and (4, 1). Draw the tree for possible movements, and the best path taken by ant assuming that ant can sense the smell up to only two cells beyond horizontally and vertically and one cell diagonally. For example, at (1, 1), she can sense the smell in (1, 2), (2, 1), (1, 3), (3, 1) and (2, 2).
 
 
 figure 1
 
 
 
-4. Given a population of 4 initial positions in a 4 X 4 board of N-queens given as the column
-vector <1, 3, 2, 4>, < 1, 1, 1, 1>, <1, 2, 3, 4>, <1, 1, 2, 4>, Use local search and movement
-of one queen picked randomly to place the queen such that the number of attacking queen
-reduces for each of initial positions separately. Show at least four moves. Use random
-number generator from a computer to pick up the column number of the queen to be moved.
-Show the process and the table of random number generated. Do not use your brain power
-to generate random numbers. 10 points
-5. For the example in the book (see Figure on the next page), work out if a person has to travel
-from Neamt to Craiova. Show the steps for greedy best first search and A* search. Measure
-the distance from Neamt using a ruler, and convert to mile knowing that one centimeter is
-approximately equivalent to 40 miles in the map for heuristic estimation. 20 points
-6. Min-max tree: For the following Min-max tree identify the min-max value at each node,
-and using alpha-beta pruning identify which branches need not be explored. Explain clearly
-the rationale, specify the
-α-
-β condition which applies for each node not to be expanded. No
-credit for just specifying answers.
+# 4. Given a population of 4 initial positions in a 4 X 4 board of N-queens given as the column vector <1, 3, 2, 4>, < 1, 1, 1, 1>, <1, 2, 3, 4>, <1, 1, 2, 4>, Use local search and movement of one queen picked randomly to place the queen such that the number of attacking queen reduces for each of initial positions separately. Show at least four moves. Use random number generator from a computer to pick up the column number of the queen to be moved. Show the process and the table of random number generated. Do not use your brain power to generate random numbers. 10 points
 
 
-Bonus Problem
-7. For a 6 X 6 board, design a good connect four evaluation-function for in-max trees
-assuming that a players (including computer) can see only upto two moves ahead and
-show the Min-Max tree for the next two moves by human and two moves by the
-computer for the following board position. Assume that red belongs to human; black
-belongs to computer. The next move is for the human.
+
+# 5. For the example in the book (see Figure on the next page), work out if a person has to travel from Neamt to Craiova. Show the steps for greedy best first search and A* search. Measure the distance from Neamt using a ruler, and convert to mile knowing that one centimeter is approximately equivalent to 40 miles in the map for heuristic estimation. 20 points # 6. Min-max tree: For the following Min-max tree identify the min-max value at each node, and using alpha-beta pruning identify which branches need not be explored. Explain clearly the rationale, specify the α- β condition which applies for each node not to be expanded. No credit for just specifying answers.
+
+
+
+
+
+# Bonus Problem 
+# 7. For a 6 X 6 board, design a good connect four evaluation-function for in-max trees assuming that a players (including computer) can see only upto two moves ahead and show the Min-Max tree for the next two moves by human and two moves by the computer for the following board position. Assume that red belongs to human; black belongs to computer. The next move is for the human.
 
 
 figure s below
